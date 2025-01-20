@@ -1,0 +1,329 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Marian College Kuttikanam</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
+
+    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+    td {
+      background-color: #fff;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+    td:first-child {
+      background-color: #003366; /* Dark Blue */
+      color: white; /* White text for better contrast */
+    }
+  </style>
+  <body>
+	  <div class="bg-top navbar-light">
+    	<div class="container">
+    		<div class="row no-gutters d-flex align-items-center align-items-stretch">
+    			<div class="col-md-4 d-flex align-items-center py-4">
+    				<a class="navbar-brand" href="index.html">MCK<span>Kuttikkanam</span></a>
+    			</div>
+	    		<div class="col-lg-8 d-block">
+		    		<div class="row d-flex">
+					    <div class="col-md d-flex topper align-items-center align-items-stretch py-md-4">
+					    	<div class="icon d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
+					    	<div class="text">
+					    		<span>Email</span>
+						    	<span>mariancollege@gmail.com</span>
+						    </div>
+					    </div>
+					    <div class="col-md d-flex topper align-items-center align-items-stretch py-md-4">
+					    	<div class="icon d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
+						    <div class="text">
+						    	<span>Call</span>
+						    	<span>Call Us: + 1235 2355 98</span>
+						    </div>
+					    </div>
+					   
+				    </div>
+			    </div>
+		    </div>
+		  </div>
+    </div>
+	  <nav class="navbar navbar-expand-lg navbar-dark bg-dark ftco-navbar-light" id="ftco-navbar">
+	    <div class="container d-flex align-items-center px-4">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="oi oi-menu"></span> Menu
+	      </button>
+	      <form action="#" class="searchform order-lg-last">
+          <div class="form-group d-flex">
+            <input type="text" class="form-control pl-3" placeholder="Search">
+            <button type="submit" placeholder="" class="form-control search"><span class="ion-ios-search"></span></button>
+          </div>
+        </form>
+	      <div class="collapse navbar-collapse" id="ftco-nav">
+	        <ul class="navbar-nav mr-auto">
+	        	<li class="nav-item active"><a href="index.html" class="nav-link pl-0">Home</a></li>
+	        	<li class="nav-item "><a href="{%url 'aboutus' %}" class="nav-link">About Us</a></li>
+	            <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link">Contact Us</a></li>
+				<li class="nav-item"><a href="{% url 'student_login' %}" class="nav-link">Login</a></li>
+	        </ul>
+	        </ul>
+	      </div>
+	    </div>
+	  </nav>
+    
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('static/images/Marian.jpg');">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+          <div class="col-md-9 ftco-animate text-center">
+            <h1 class="mb-2 bread">About Us</h1>
+            <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>About us <i class="ion-ios-arrow-forward"></i></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+		
+		<section class="ftco-section ftco-no-pt ftc-no-pb">
+			<div class="container">
+				<div class="row d-flex">
+					<div class="col-md-5 order-md-last wrap-about wrap-about d-flex align-items-stretch">
+						<div class="img" style="background-image: url(static/images/college.jpg); border"></div>
+					</div>
+					<div class="col-md-7 wrap-about py-5 pr-md-4 ftco-animate">
+          	<h2 class="mb-4">Marian College Kuttikanam Etablished Since 1995</h2>
+						
+						<p>Marian College Kuttikkanam Autonomous, affiliated to Mahatma Gandhi University Kottayam, Kerala was founded in 1995 and is managed by the Catholic Diocese of Kanjirapally through the Peermade Development Society (PDS). The institution is the realization of the vision of the Management to provide quality higher education opportunities in the backward hill district of Idukki which has tribal, migrant and minority populations. 
+
+              The College is nestled in the green highlands of the Western Ghats, where biodiversity is garbed in the mantle of a cool, misty, and salubrious ambience ideal for academic pursuits. With her focus on job-oriented study programs with an outcome-based, technology-integrated learning approach, Marian is committed to improving the educational standing of the district and preparing students to meet the challenges of the competitive job market and life situations. Banking on the divine direction of Christ Jesus and the benefaction of Mother Mary, the College champions her commitment to the ‘full-flowering of life in abundance’. 
+              
+              The educational vision of the Management has given a sense of direction to the development of the College over the years. Marian performed consistently in the NAAC accreditations securing high scores. The College was first accredited in 2003 with B++ (83%) and again reaccredited with an ‘A’ grade (CGPA of 3.45) in 2009. During the third cycle of accreditation, held in 2014, Marian scored a high ‘A’ grade (CGPA 3.52/4). The College was conferred with the prestigious CPE status by UGC in 2009 and it was extended in 2014 making Marian eligible for phase II financial assistance. In 2016, the institution was elevated to the status of an Autonomous College by the UGC and was ranked 84th in NIRF 2018. Marian has mentored three colleges to get successful accreditation under the PARAMARSH scheme, including a college from North East India. In 2023, the college received a reputed CGPA score of 3.71 with A++ grade in its fourth cycle of NAAC re-accreditation.
+              
+              Marian has a glorious tradition of academic excellence proven through University ranks and high placements. The College has academic tie-ups with several renowned international Universities like Hong Kong Baptist University, Chinese University of Hong Kong, Lincoln University College Malaysia, etc. Marian imparts information with the intention of the right character formation for the students, eventually achieving their holistic transformation. As a premier center of knowledge generation and empowerment, Marian has always been at the forefront to take up new academic and co-academic initiatives. </p>
+					</div>
+				</div>
+			</div>
+		</section>
+		
+
+		<section class="ftco-section ftco-counter img" id="section-counter" style="background-image: url(static/images/bg_3.jpg);" data-stellar-background-ratio="0.5">
+    	
+      <div class="container">
+        <h1>About Us</h1>
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>Name of the College</td>
+                <td>Marian College Kuttikkanam Autonomous</td>
+            </tr>
+            <tr>
+                <td>Place</td>
+                <td>Kuttikkanam P.O., Peermade, Idukki-685531</td>
+            </tr>
+            <tr>
+                <td>State</td>
+                <td>Kerala, India</td>
+            </tr>
+            <tr>
+                <td>Affiliating University</td>
+                <td>Mahatma Gandhi University, Kottayam, Kerala</td>
+            </tr>
+            <tr>
+                <td>Status of the College</td>
+                <td>Autonomous with Minority Status</td>
+            </tr>
+            <tr>
+                <td>Financial Category</td>
+                <td>Grant-in-aid and Self-Financing</td>
+            </tr>
+            <tr>
+                <td>Principal</td>
+                <td>Prof. Dr. Ajimon George</td>
+            </tr>
+            <tr>
+                <td>Contact Details (Principal)</td>
+                <td>9446919482, 9447733265<br>principal@mariancollege.org</td>
+            </tr>
+            <tr>
+                <td>Type of College</td>
+                <td>Co-Education</td>
+            </tr>
+            <tr>
+                <td>No. of Departments</td>
+                <td>13</td>
+            </tr>
+            <tr>
+                <td>No. of Programmes</td>
+                <td>UG: 6 | PG: 7 | Ph.D.: 1</td>
+            </tr>
+            <tr>
+                <td>Year of Establishment</td>
+                <td>1995</td>
+            </tr>
+            <tr>
+                <td>Year of Granting Autonomy</td>
+                <td>2016</td>
+            </tr>
+            <tr>
+                <td>UGC Recognition</td>
+                <td>Under 2(f) and 12B</td>
+            </tr>
+            <tr>
+                <td>Location of the College</td>
+                <td>Rural</td>
+            </tr>
+            <tr>
+                <td>Area of the Campus</td>
+                <td>26.5 Acres</td>
+            </tr>
+        </table>
+    </div>
+    </section>
+
+
+
+		<section class="ftco-gallery">
+    	<div class="container-wrap">
+    		<div class="row no-gutters">
+					<div class="col-md-3 ftco-animate">
+						<a href="images/image_1.jpg" class="gallery image-popup img d-flex align-items-center" style="background-image: url(static/images/about1.jpg);">
+							<div class="icon mb-4 d-flex align-items-center justify-content-center">
+    						<span class="icon-instagram"></span>
+    					</div>
+						</a>
+					</div>
+					<div class="col-md-3 ftco-animate">
+						<a href="images/image_2.jpg" class="gallery image-popup img d-flex align-items-center" style="background-image: url(static/images/about2.jpg);">
+							<div class="icon mb-4 d-flex align-items-center justify-content-center">
+    						<span class="icon-instagram"></span>
+    					</div>
+						</a>
+					</div>
+					<div class="col-md-3 ftco-animate">
+						<a href="images/image_3.jpg" class="gallery image-popup img d-flex align-items-center" style="background-image: url(static/images/about3.jpeg);">
+							<div class="icon mb-4 d-flex align-items-center justify-content-center">
+    						<span class="icon-instagram"></span>
+    					</div>
+						</a>
+					</div>
+					<div class="col-md-3 ftco-animate">
+						<a href="images/image_4.jpg" class="gallery image-popup img d-flex align-items-center" style="background-image: url(static/images/about4.jpg);">
+							<div class="icon mb-4 d-flex align-items-center justify-content-center">
+    						<span class="icon-instagram"></span>
+    					</div>
+						</a>
+					</div>
+        </div>
+    	</div>
+    </section>
+
+		
+    <footer class="ftco-footer ftco-bg-dark ftco-section">
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-md-6 col-lg-3">
+            <div class="ftco-footer-widget mb-5">
+            	<h2 class="ftco-heading-2">Have a Questions?</h2>
+            	<div class="block-23 mb-3">
+	              <ul>
+	                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
+	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+	              </ul>
+	            </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 col-lg-3">
+            <div class="ftco-footer-widget mb-5 ml-md-4">
+              <h2 class="ftco-heading-2">Links</h2>
+              <ul class="list-unstyled">
+                <li><a href="{%url 'home' %}" ><span class="ion-ios-arrow-round-forward mr-2"></span>Home</a></li>
+                <li><a href="{%url 'aboutus' %}" ><span class="ion-ios-arrow-round-forward mr-2"></span>About</a></li>
+                <li><a href="{%url 'student_login' %}" ><span class="ion-ios-arrow-round-forward mr-2"></span>Login</a></li>
+                
+                <li><a href="{%url 'contact' %}" ><span class="ion-ios-arrow-round-forward mr-2"></span>Contact</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3">
+           
+            <div class="ftco-footer-widget mb-5">
+            	<h2 class="ftco-heading-2 mb-0">Connect With Us</h2>
+            	<ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-3">
+                <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 text-center">
+
+            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved |  <i class="icon-heart" aria-hidden="true"></i><a href="https://colorlib.com" target="_blank"></a>
+  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+          </div>
+        </div>
+      </div>
+    </footer>
+    
+  
+
+  <!-- loader -->
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/jquery-migrate-3.0.1.min.js' %}"></script>
+  <script src="{% static 'js/popper.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+  <script src="{% static 'js/aos.js' %}"></script>
+  <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
+  <script src="{% static 'js/scrollax.min.js' %}"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="{% static 'js/google-map.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  </body>
+</html>

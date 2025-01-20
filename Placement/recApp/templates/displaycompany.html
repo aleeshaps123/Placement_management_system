@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .table-container {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        overflow-x: auto;
+    }
+
+    .header-section {
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .header-section h2 {
+        color: #1a237e;
+        font-size: 1.75rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0;
+    }
+
+    .company-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 1rem;
+    }
+
+    .company-table th {
+        background-color: #f8f9fa;
+        color: #1a237e;
+        font-weight: 600;
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 2px solid #e5e7eb;
+        white-space: nowrap;
+    }
+
+    .company-table td {
+        padding: 1rem;
+        color: #374151;
+        border-bottom: 1px solid #e5e7eb;
+        transition: background-color 0.2s ease;
+    }
+
+    .company-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .company-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Column specific styles */
+    .company-table td:nth-child(1) {
+        font-weight: 500;
+        color: #1a237e;
+    }
+
+    .company-table td:nth-child(6), 
+    .company-table td:nth-child(7) {
+        color: #3949ab;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 1024px) {
+        .table-container {
+            padding: 1rem;
+        }
+
+        .company-table th,
+        .company-table td {
+            padding: 0.75rem;
+            font-size: 0.95rem;
+        }
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6b7280;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #e5e7eb;
+    }
+</style>
+
+<div class="table-container">
+    <div class="header-section">
+        <h2>
+            <i class="fas fa-list-alt"></i>
+            Company Details
+        </h2>
+    </div>
+
+    {% if companies %}
+    <table class="company-table">
+        <thead>
+            <tr>
+                <th>Company Name</th>
+                <th>Place</th>
+                <th>Street</th>
+                <th>Pincode</th>
+                <th>District</th>
+                <th>Contact</th>
+                <th>Email</th>
+                <th>Action</th> <!-- Add action column for delete -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for company in companies %}
+            <tr>
+                <td>{{ company.name }}</td>
+                <td>{{ company.place }}</td>
+                <td>{{ company.street }}</td>
+                <td>{{ company.pincode }}</td>
+                <td>{{ company.district }}</td>
+                <td>{{ company.contact_number }}</td>
+                <td>{{ company.email }}</td>
+                <td>
+                    <!-- Delete button -->
+                    <form method="POST" action="{% url 'delete_company' company.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-inbox"></i>
+        <p>No companies have been added yet</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

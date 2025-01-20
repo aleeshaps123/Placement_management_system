@@ -1,0 +1,345 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<style>
+    /* Base styles */
+    :root {
+        --sidebar-bg: #1a237e;
+        --sidebar-hover: #283593;
+        --sidebar-text: #ffffff;
+        --active-link: #3949ab;
+        --content-bg: #f8f9fa;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        display: flex;
+        min-height: 100vh;
+        background-color: var(--content-bg);
+    }
+
+    /* Sidebar styles */
+    .sidebar {
+        width: 280px;
+        background-color: var(--sidebar-bg);
+        color: var(--sidebar-text);
+        padding: 1.5rem 1rem;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        position: fixed;
+        box-shadow: 4px 0 10px var(--shadow-color);
+    }
+
+    .sidebar h2 {
+        padding: 0.5rem 1rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .nav-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .sidebar a {
+        color: var(--sidebar-text);
+        text-decoration: none;
+        padding: 0.875rem 1rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .sidebar a i {
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+    }
+
+    .sidebar a:hover {
+        background-color: var(--sidebar-hover);
+        transform: translateX(4px);
+    }
+
+    .sidebar a.active {
+        background-color: var(--active-link);
+    }
+
+    .sidebar a:hover::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background-color: #fff;
+        border-radius: 0 2px 2px 0;
+    }
+
+    .logout-link {
+        margin-top: auto;
+        margin-bottom: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 1rem;
+    }
+
+    /* Content styles */
+    .content {
+        flex-grow: 1;
+        padding: 2rem;
+        margin-left: 280px;
+        background-color: var(--content-bg);
+        min-height: 100vh;
+    }
+
+    .content-inner {
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px var(--shadow-color);
+    }
+
+    /* Placement Table styles */
+    .table-container {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        overflow-x: auto;
+    }
+
+    .header-section {
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .header-section h2 {
+        color: #1a237e;
+        font-size: 1.75rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0;
+    }
+
+    .placement-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 1rem;
+    }
+
+    .placement-table th {
+        background-color: #f8f9fa;
+        color: #1a237e;
+        font-weight: 600;
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 2px solid #e5e7eb;
+        white-space: nowrap;
+    }
+
+    .placement-table td {
+        padding: 1rem;
+        color: #374151;
+        border-bottom: 1px solid #e5e7eb;
+        transition: background-color 0.2s ease;
+    }
+
+    .placement-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .placement-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .salary-package {
+        font-weight: 600;
+        color: #059669;
+    }
+
+    .date-cell {
+        white-space: nowrap;
+        color: #6b7280;
+    }
+
+    .company-name {
+        font-weight: 500;
+        color: #1a237e;
+    }
+
+    .action-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background-color: #1a237e;
+        color: white;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .action-link:hover {
+        background-color: #283593;
+        transform: translateY(-1px);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6b7280;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #e5e7eb;
+    }
+
+    @media (max-width: 1024px) {
+        .table-container {
+            padding: 1rem;
+        }
+
+        .placement-table th,
+        .placement-table td {
+            padding: 0.75rem;
+            font-size: 0.95rem;
+        }
+    }
+</style>
+<body>
+    <div class="sidebar">
+        <h2>
+            <i class="fas fa-shield-alt"></i>
+            Admin Panel
+        </h2>
+        <div class="nav-links">
+            <a href="{% url 'addcompany' %}">
+                <i class="fas fa-building"></i>
+                Add Company
+            </a>
+            <a href="{% url 'displaycompany' %}">
+                <i class="fas fa-list-alt"></i>
+                Company Details
+            </a>
+            <a href="{% url 'addplacement' %}">
+                <i class="fas fa-user-plus"></i>
+                Add Placement
+            </a>
+            <a href="{% url 'displayplacement' %}" class="active">
+                <i class="fas fa-clipboard-list"></i>
+                Placement Details
+            </a>
+            <a href="{% url 'add_placed_student' %}">
+                <i class="fas fa-user-graduate"></i>
+                <span>Add new Placed Student</span>
+            </a>
+            <a href="{% url 'display_placed_students' %}">
+                <i class="fas fa-user-graduate"></i>
+                <span>Placed Students</span>
+            </a>
+            <a href="{% url 'student_profiles' %}">
+                <i class="fas fa-user-graduate"></i>
+                Student Profiles
+            </a>
+        </div>
+        <a href="{% url 'logout' %}" class="logout-link">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+        </a>
+    </div>
+    
+    <div class="content">
+        <div class="content-inner">
+            <div class="table-container">
+                <div class="header-section">
+                    <h2>
+                        <i class="fas fa-briefcase"></i>
+                        Placement List
+                    </h2>
+                </div>
+
+                {% if placements %}
+                <table class="placement-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Company</th>
+                            <th>Location</th>
+                            <th>Position</th>
+                            <th>Job Profile</th>
+                            <th>Date of Drive</th>
+                            <th>Salary Package (L)</th>
+                            <th>Application due date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for placement in placements %}
+                        <tr>
+                            <td>{{ placement.title }}</td>
+                            <td class="company-name">{{ placement.company.name }}</td>
+                            <td>{{ placement.location }}</td>
+                            <td>{{ placement.position }}</td>
+                            <td>{{ placement.job_profile }}</td>
+                            <td class="date-cell">{{ placement.date_of_drive }}</td>
+                            <td class="salary-package">₹{{ placement.salary_package }} L</td>
+                            <td class="date-cell">{{ placement.last_date_to_apply }}</td>
+                            <td>
+                                <a href="{% url 'view_applicants' placement.id %}" class="action-link">
+                                    <i class="fas fa-users"></i>
+                                    View Applicants
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-briefcase"></i>
+                    <p>No placements have been added yet</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

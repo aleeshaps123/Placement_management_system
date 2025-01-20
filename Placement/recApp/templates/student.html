@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+        }
+        .sidebar p {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        .sidebar a {
+            text-decoration: none;
+            color: #fff;
+            padding: 10px 15px;
+            margin: 5px 0;
+            background-color: #495057;
+            border-radius: 5px;
+            display: block;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #6c757d;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;  /* Vertically center the content */
+            align-items: center;      /* Horizontally center the content */
+            text-align: center;       /* Optional: Centers the text inside */
+        }
+        .content h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        .content p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Student Panel</h2>
+        <!-- Display logged-in user's name -->
+        <p>Welcome, {{ user.username }}!</p>
+
+        <!-- Sidebar Links -->
+        <a href="{% url 'updateprofile' %}" class="active">Update Profile</a>
+        <a href="{% url 'studentplacements' %}">Placement List</a>
+        <a href="{% url 'applied_placements' %}">Placement Applied List</a>
+        <a href="#">Logout</a>
+    </div>
+
+    <div class="content">
+        <h1>Welcome to the Student Dashboard</h1>
+        <p>Select an option from the sidebar to get started.</p>
+    </div>
+
+    <script>
+        // Set the default active link dynamically (optional JavaScript enhancement)
+        const sidebarLinks = document.querySelectorAll('.sidebar a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                sidebarLinks.forEach(link => link.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

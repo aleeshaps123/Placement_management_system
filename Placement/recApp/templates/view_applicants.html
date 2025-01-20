@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-inner">
+    <div class="placement-header">
+        <h2><i class="fas fa-users"></i> Applicants for Placement: {{ placement.title }}</h2>
+        <div class="placement-details">
+            <span><i class="fas fa-building"></i> {{ placement.company.name }}</span>
+            <span><i class="fas fa-map-marker-alt"></i> {{ placement.location }}</span>
+            <span><i class="fas fa-calendar"></i> {{ placement.date_of_drive }}</span>
+        </div>
+    </div>
+
+    <div class="filter-section">
+        <h3><i class="fas fa-filter"></i> Filter Applicants</h3>
+        <form method="get" class="filter-form">
+            {{ filter_form.as_p }}
+            <button type="submit" class="action-button">
+                <i class="fas fa-search"></i> Apply Filter
+            </button>
+        </form>
+    </div>
+
+    <div class="applicants-section">
+        <div class="section-header">
+            <h3><i class="fas fa-list"></i> Applicants List</h3>
+            {% if applicants %}
+            <a href="{% url 'export_filtered_applicants_to_excel' placement.id %}?{{ request.GET.urlencode }}" 
+               class="action-button download-button">
+                <i class="fas fa-download"></i> Download List
+            </a>
+            {% endif %}
+        </div>
+
+        {% if applicants %}
+        <div class="table-container">
+            <table class="applicants-table">
+                <thead>
+                    <tr>
+                        <th class="col-image"></th>
+                        <th class="col-name">Name</th>
+                        <th class="col-gender">Gender</th>
+                        <th class="col-dob">DOB</th>
+                        <th class="col-contact">Contact</th>
+                        <th class="col-email">Email</th>
+                        <th class="col-sslc">SSLC</th>
+                        <th class="col-hsc">HSC</th>
+                        <th class="col-ug">UG</th>
+                        <th class="col-pg">PG</th>
+                        <th class="col-skills">Skills</th>
+                        <th class="col-resume">CV</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for applicant in applicants %}
+                    <tr>
+                        <td class="col-image">
+                            {% if applicant.image %}
+                            <img src="{{ applicant.image.url }}" alt="Profile" class="profile-image">
+                            {% else %}
+                            <div class="profile-placeholder">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            {% endif %}
+                        </td>
+                        <td class="col-name">{{ applicant.name }}</td>
+                        <td class="col-gender">{{ applicant.gender }}</td>
+                        <td class="col-dob">{{ applicant.date_of_birth|date:"d/m/Y" }}</td>
+                        <td class="col-contact">{{ applicant.contact_number }}</td>
+                        <td class="col-email">{{ applicant.email }}</td>
+                        <td class="col-sslc">
+                            {{ applicant.sslc_percentage }}%
+                            <small>({{ applicant.sslc_year }})</small>
+                        </td>
+                        <td class="col-hsc">
+                            {{ applicant.hsc_percentage }}%
+                            <small>({{ applicant.hsc_year }})</small>
+                        </td>
+                        <td class="col-ug">
+                            {{ applicant.ug_percentage }}%
+                            <small>({{ applicant.ug_year }})</small>
+                        </td>
+                        <td class="col-pg">
+                            {% if applicant.pg_percentage %}
+                            {{ applicant.pg_percentage }}%
+                            <small>({{ applicant.pg_year }})</small>
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td class="col-skills">{{ applicant.skills }}</td>
+                        <td class="col-resume">
+                            {% if applicant.resume %}
+                            <a href="{{ applicant.resume.url }}" class="document-link" target="_blank">
+                                <i class="fas fa-file-pdf"></i>
+                            </a>
+                            {% else %}
+                            <span class="no-document">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-user-slash"></i>
+            <p>No applicants found for this placement matching the given criteria.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .content-inner {
+        background: #ffffff;
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 1rem;
+        font-size: 0.875rem;
+    }
+
+    .placement-header {
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .placement-header h2 {
+        color: #1a237e;
+        font-size: 1.25rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .placement-details {
+        display: flex;
+        gap: 1rem;
+        color: #6b7280;
+        flex-wrap: wrap;
+    }
+
+    .placement-details span {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.875rem;
+    }
+
+    .filter-section {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+    .filter-section h3 {
+        color: #1a237e;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .filter-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.5rem;
+    }
+
+    .action-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.375rem 0.75rem;
+        background-color: #1a237e;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .download-button {
+        background-color: #059669;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .applicants-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.813rem;
+    }
+
+    .applicants-table th {
+        background-color: #f8f9fa;
+        color: #1a237e;
+        font-weight: 600;
+        padding: 0.5rem;
+        text-align: left;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+    .applicants-table td {
+        padding: 0.5rem;
+        color: #374151;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    /* Column-specific widths */
+    .col-image { width: 40px; }
+    .col-name { width: 120px; }
+    .col-gender { width: 60px; }
+    .col-dob { width: 80px; }
+    .col-contact { width: 100px; }
+    .col-email { width: 150px; }
+    .col-sslc, .col-hsc, .col-ug, .col-pg { width: 80px; }
+    .col-skills { width: 150px; }
+    .col-resume { width: 40px; }
+
+    .profile-image {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .profile-placeholder {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        font-size: 0.75rem;
+    }
+
+    small {
+        display: block;
+        color: #6b7280;
+        font-size: 0.75rem;
+    }
+
+    .document-link {
+        color: #1a237e;
+        text-decoration: none;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 2rem 1rem;
+        color: #6b7280;
+    }
+
+    .empty-state i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: #e5e7eb;
+    }
+
+    /* Make specific columns wrap text */
+    .col-skills {
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    /* Add tooltip for truncated content */
+    .col-skills {
+        position: relative;
+    }
+
+    .col-skills:hover::after {
+        content: attr(title);
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        background: #333;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        white-space: normal;
+        max-width: 200px;
+        z-index: 1;
+    }
+
+    tr:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+
+<script>
+    // Add tooltips for skills cells that have truncated content
+    document.addEventListener('DOMContentLoaded', function() {
+        const skillsCells = document.querySelectorAll('.col-skills');
+        skillsCells.forEach(cell => {
+            if (cell.scrollWidth > cell.clientWidth) {
+                cell.setAttribute('title', cell.textContent);
+            }
+        });
+    });
+</script>
+{% endblock %}

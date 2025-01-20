@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Statistics Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-12">
+            <h1 class="text-3xl font-bold text-gray-800 text-center">Placement Statistics Dashboard</h1>
+            <p class="text-gray-600 text-center mt-2">Interactive visualization of student placement data</p>
+        </header>
+        
+        <!-- Link to Placed Students List (aligned to the right) -->
+        <div class="flex justify-end mb-4">
+            <a href="{% url 'display_placed_students' %}" class="text-blue-500">View Placed Students List</a>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Year-wise Placements Card -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Students Placed by Year</h2>
+                <div class="relative h-[400px]">
+                    <canvas id="chartByYear"></canvas>
+                </div>
+                <p class="text-sm text-gray-500 mt-4">Click on any year to see department-wise breakdown</p>
+            </div>
+
+            <!-- Department-wise Placements Card -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">Department-wise Distribution</h2>
+                <div class="relative h-[400px]">
+                    <canvas id="chartByDept"></canvas>
+                </div>
+                <div id="yearIndicator" class="text-center text-sm text-gray-500 mt-4">
+                    Select a year from the bar chart to view department data
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dataByYear = {{ data_by_year|safe }};
+        const dataByDeptYear = {{ data_by_dept_year|safe }};
+
+        // Utility function for gradient
+        function createGradient(ctx, color) {
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, color);
+            gradient.addColorStop(1, '#ffffff');
+            return gradient;
+        }
+
+        // Chart 1: Year-wise placements
+        const ctx1 = document.getElementById('chartByYear').getContext('2d');
+        const chartByYear = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(dataByYear),
+                datasets: [{
+                    label: 'Students Placed',
+                    data: Object.values(dataByYear),
+                    backgroundColor: createGradient(ctx1, 'rgba(59, 130, 246, 0.5)'),
+                    borderColor: 'rgb(59, 130, 246)',
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    barThickness: 30
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                onClick: (e) => {
+                    const points = chartByYear.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+                    if (points.length) {
+                        const clickedYear = chartByYear.data.labels[points[0].index];
+                        updateDeptChart(clickedYear);
+                        document.getElementById('yearIndicator').textContent = `Showing department data for ${clickedYear}`;
+                    }
+                }
+            }
+        });
+
+        // Chart 2: Department-wise placements
+        const ctx2 = document.getElementById('chartByDept').getContext('2d');
+        const chartByDept = new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.7)',
+                        'rgba(16, 185, 129, 0.7)',
+                        'rgba(245, 158, 11, 0.7)',
+                        'rgba(239, 68, 68, 0.7)',
+                        'rgba(139, 92, 246, 0.7)',
+                        'rgba(236, 72, 153, 0.7)'
+                    ],
+                    borderColor: 'white',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        function updateDeptChart(year) {
+            fetch(`/get_chart_data/?year=${year}`)
+                .then(response => response.json())
+                .then(data => {
+                    chartByDept.data.labels = Object.keys(data.dept_data);
+                    chartByDept.data.datasets[0].data = Object.values(data.dept_data);
+                    chartByDept.update();
+                })
+                .catch(error => {
+                    console.error('Error fetching department data:', error);
+                });
+        }
+    </script>
+</body>
+</html>
