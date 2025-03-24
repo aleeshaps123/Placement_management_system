@@ -97,6 +97,33 @@
         margin-bottom: 1rem;
         color: #e5e7eb;
     }
+
+    .btn-danger {
+        background-color: #dc3545; /* Bootstrap red */
+        border: none;
+        color: white;
+        padding: 6px 14px;
+        font-size: 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    
+    .btn-danger:hover {
+        background-color: #c82333; /* Darker red on hover */
+        transform: scale(1.05);
+    }
+    
+    .btn-danger:active {
+        background-color: #bd2130;
+        transform: scale(0.98);
+    }
+    
+    .btn-sm {
+        padding: 4px 10px;
+        font-size: 13px;
+    }
+    
 </style>
 
 <div class="table-container">
@@ -112,12 +139,12 @@
         <thead>
             <tr>
                 <th>Company Name</th>
-                <th>Place</th>
-                <th>Street</th>
-                <th>Pincode</th>
-                <th>District</th>
-                <th>Contact</th>
                 <th>Email</th>
+                <th>Contact</th>
+                <th>Place</th>
+                <th>District</th>
+                <th>Website</th>
+               
                 <th>Action</th> <!-- Add action column for delete -->
             </tr>
         </thead>
@@ -125,12 +152,12 @@
             {% for company in companies %}
             <tr>
                 <td>{{ company.name }}</td>
-                <td>{{ company.place }}</td>
-                <td>{{ company.street }}</td>
-                <td>{{ company.pincode }}</td>
-                <td>{{ company.district }}</td>
-                <td>{{ company.contact_number }}</td>
                 <td>{{ company.email }}</td>
+                <td>{{ company.contact_number }}</td>
+                <td>{{ company.place }}</td>
+                <td>{{ company.district }}</td>
+                <td><a href="{{ company.website }}" target="_blank" style="color:blue; text-decoration: none;">{{ company.website }}</a></td>
+
                 <td>
                     <!-- Delete button -->
                     <form method="POST" action="{% url 'delete_company' company.id %}" style="display:inline;">

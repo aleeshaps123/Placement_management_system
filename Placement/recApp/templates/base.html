@@ -154,19 +154,23 @@
             
             <a href="{% url 'addplacement' %}" class="{% if request.resolver_match.url_name == 'addplacement' %}active{% endif %}">
                 <i class="fas fa-user-plus"></i>
-                Add Placement
+                Add Job Opening
             </a>
             <a href="{% url 'displayplacement' %}" class="{% if request.resolver_match.url_name == 'displayplacement' %}active{% endif %}">
                 <i class="fas fa-clipboard-list"></i>
-                Placement Details
+                Posted Jobs
+            </a>
+            <a href="{% url 'admin_review_placements' %}">
+                <i class="fas fa-user-graduate"></i>
+                Student Review Submission
             </a>
             <a href="{% url 'add_placed_student' %}" class="{% if request.resolver_match.url_name == 'add_placed_student' %}active{% endif %}">
                 <i class="fas fa-user-graduate"></i>
-                <span>Add new Placed Student</span>
+                <span>Add Placement Record</span>
             </a>
             <a href="{% url 'display_placed_students' %}" class="{% if request.resolver_match.url_name == 'display_placed_students' %}active{% endif %}">
                 <i class="fas fa-graduation-cap"></i>
-                <span>Placed Students</span>
+                <span>Placement Records</span>
             </a>
 
             <a href="{% url 'student_profiles' %}" class="{% if request.resolver_match.url_name == 'student_profiles' %}active{% endif %}">

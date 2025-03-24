@@ -113,12 +113,40 @@
             grid-column: span 1;
         }
     }
+    .alert-success {
+        background-color: #d1e7dd;
+        color: #0f5132;
+        border: 1px solid #badbcc;
+        margin-bottom: 15px;
+        padding: 10px 15px;
+        border-radius: 6px;
+    }
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #842029;
+        border: 1px solid #f5c2c7;
+        margin-bottom: 15px;
+        padding: 10px 15px;
+        border-radius: 6px;
+    }
 </style>
 
 <div class="form-container">
     <div class="form-header">
         <h2><i class="fas fa-building"></i> Add New Company</h2>
     </div>
+
+    
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert 
+            {% if message.tags == 'error' %}alert-danger
+            {% elif message.tags == 'success' %}alert-success
+            {% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
     
     <form method="POST" onsubmit="return validateForm()">
         {% csrf_token %}
@@ -148,11 +176,7 @@
                        placeholder="Enter location" required>
             </div>
 
-            <div class="form-group">
-                <label for="street" class="required-field">Street</label>
-                <input type="text" id="street" name="street" class="form-control" 
-                       placeholder="Enter street address" required>
-            </div>
+            
 
             <div class="form-group">
                 <label for="district" class="required-field">District</label>
@@ -161,10 +185,9 @@
             </div>
 
             <div class="form-group">
-                <label for="pincode" class="required-field">Pincode</label>
-                <input type="number" id="pincode" name="pincode" class="form-control" 
-                       placeholder="Enter pincode" required>
-                <small id="pincode-error" style="color: red; display: none;">Pincode must be a 6-digit number and not accept negative values.</small>
+                <label for="website" class="required-field">Website</label>
+                <input type="url" id="website" name="website" class="form-control" 
+                       placeholder="Enter company website" required>
             </div>
         </div>
 
@@ -177,21 +200,15 @@
     </form>
 </div>
 
-<script>
-    function validateForm() {
-        var pincode = document.getElementById('pincode').value;
-        var pincodeError = document.getElementById('pincode-error');
-        
-        // Check if pincode is a 6-digit number and is not negative
-        var regex = /^\d{6}$/;
-        if (!regex.test(pincode) || pincode < 0) {
-            pincodeError.style.display = 'inline';  // Show error message
-            return false;  // Prevent form submission
-        } else {
-            pincodeError.style.display = 'none';  // Hide error message
-        }
-        return true;  // Allow form submission
-    }
-</script>
+
 
 {% endblock %}
+<script>
+    // Auto-hide messages after 3 seconds (3000 milliseconds)
+    setTimeout(function() {
+        const msgContainer = document.getElementById('message-container');
+        if (msgContainer) {
+            msgContainer.style.display = 'none';
+        }
+    }, 3000);
+</script>

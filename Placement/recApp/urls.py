@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
+from .views import submit_placement, admin_review_placements, approve_placement, reject_placement, placement_details
 
 urlpatterns = [
     path('',views.home,name="home"),
@@ -17,7 +18,7 @@ urlpatterns = [
     path('signup',views.studentsignup,name='signup'),
     path('login/', views.student_login, name='student_login'),
     path('updateprofile/', views.update_profile, name='updateprofile'),
-    path('student/placements/', views.student_placements_view, name='studentplacements'),
+    path('student/placements/', views.student_placements, name='studentplacements'),
     path('student/apply/<int:placement_id>/', views.apply_for_placement, name='apply_for_placement'),
     # URL for viewing applied placements
     path('applied_placements/', views.applied_placements, name='applied_placements'),
@@ -36,6 +37,14 @@ urlpatterns = [
     path('password_reset/done/', views.password_reset_done, name='password_reset_done'),
     path('reset/<uidb64>/<token>/', views.password_reset_confirm, name='password_reset_confirm'),
     path('reset/done/', views.password_reset_complete, name='password_reset_complete'),
-    
+    path('student-summary/', views.department_statistics, name='department_statistics'),
+    path("submit-placement/", views.submit_placement, name="submit_placement"),
+    path("placement-status/", views.student_placement_status, name="student_placement_status"),
+
+    # Admin URLs
+    path("review-placements/", views.admin_review_placements, name="admin_review_placements"),
+    path("approve-placement/<int:placement_id>/", views.approve_placement, name="approve_placement"),
+    path("reject-placement/<int:placement_id>/", views.reject_placement, name="reject_placement"),
+    path('placement/<int:placement_id>/', placement_details, name='placement_details'),
 
     ]

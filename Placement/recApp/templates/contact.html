@@ -27,7 +27,7 @@
     	<div class="container">
     		<div class="row no-gutters d-flex align-items-center align-items-stretch">
     			<div class="col-md-4 d-flex align-items-center py-4">
-    				<a class="navbar-brand" href="index.html">Fox. <span>University</span></a>
+    				<a class="navbar-brand" href="index.html">MCK<span>Kuttikkanam</span></a>
     			</div>
 	    		<div class="col-lg-8 d-block">
 		    		<div class="row d-flex">
@@ -64,9 +64,9 @@
         </form>
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active"><a href="index.html" class="nav-link pl-0">Home</a></li>
+            <li class="nav-item"><a href="{%url 'home' %}" class="nav-link pl-0">Home</a></li>
 	        	<li class="nav-item "><a href="{%url 'aboutus' %}" class="nav-link">About Us</a></li>
-	            <li class="nav-item"><a href="{% url 'contact' %}" class="nav-link">Contact Us</a></li>
+	            <li class="nav-item active"><a href="{% url 'contact' %}" class="nav-link">Contact Us</a></li>
 				<li class="nav-item"><a href="{% url 'student_login' %}" class="nav-link">Login</a></li>
 	        </ul>
 	        </ul>
@@ -151,7 +151,7 @@
                   </form>
               </div>
               <div class="col-md-6 d-flex align-items-stretch">
-                  <div id="map"></div>
+                  <div id="map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2014038.639690647!2d75.46907786020596!3d9.62372312782638!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b064dc8bda5cb29%3A0x3d161914b6967f9!2sMarian%20College%20Kuttikkanam%20(Autonomous)!5e0!3m2!1sen!2sin!4v1738057195772!5m2!1sen!2sin" width="600" height="90%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
               </div>
           </div>
       </div>
@@ -228,8 +228,6 @@
   <script src="{% static 'js/aos.js' %}"></script>
   <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
   <script src="{% static 'js/scrollax.min.js' %}"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-  <script src="{% static 'js/google-map.js' %}"></script>
   <script src="{% static 'js/main.js' %}"></script>
     
   </body>

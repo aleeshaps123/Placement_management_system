@@ -7,20 +7,20 @@ from .models import Company,Placement,Student
 # Customizing the admin interface for the Company model
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'place', 'district', 'pincode', 'contact_number', 'email')  # Fields to display in the admin list view
+    list_display = ('name', 'place', 'district', 'contact_number', 'email','website')  # Fields to display in the admin list view
     search_fields = ('name', 'place', 'district', 'email')  # Fields to enable search functionality
     list_filter = ('district',)  # Fields to enable filtering options
     ordering = ('name',)  # Default ordering by company name
     fieldsets = (
         (None, {
-            'fields': ('name', 'place', 'street', 'pincode', 'district', 'contact_number', 'email')
+            'fields': ('name', 'place','district', 'contact_number', 'email','website')
         }),
     )
 
 
 @admin.register(Placement)
 class PlacementAdmin(admin.ModelAdmin):
-    list_display = ('title', 'company', 'location', 'position', 'date_of_drive', 'salary_package')  # Customize columns
+    list_display = ('title', 'company', 'location', 'position', 'date_of_drive','recruitment_type', 'salary_package')  # Customize columns
     list_filter = ('company', 'date_of_drive')  # Add filter optionsfrom django.contrib import admin
 
 
@@ -50,7 +50,7 @@ class StudentAdmin(admin.ModelAdmin):
 
 
 
-from .models import Company, Placement, Student, PlacementApplication, Notification, PlacedStudent
+from .models import Company, Placement, Student, PlacementApplication, PlacedStudent
 
 # Customizing the admin interface for the PlacedStudent model
 @admin.register(PlacedStudent)

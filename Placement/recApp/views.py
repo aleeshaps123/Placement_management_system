@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from . models import *
 from django.contrib import messages
+from django.conf import settings
 
 
 # Create your views here.
@@ -16,32 +17,53 @@ def aboutus(request):
 def coordinator_dashboard(request):
     return render(request, 'pdashboard.html')
 
+from django.contrib import messages
+
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 def add_company(request):
     if request.method == "POST":
         name = request.POST.get('name')
         place = request.POST.get('place')
-        street = request.POST.get('street')
-        pincode = request.POST.get('pincode')
         district = request.POST.get('district')
         contact_number = request.POST.get('contact_number')
         email = request.POST.get('email')
+        website = request.POST.get('website')
 
-        # Save company details to database
+        # Validate email format
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.error(request, "Please enter a valid email address.")
+            return redirect('addcompany')
+
+        # Check if company with same name or email already exists
+        if Company.objects.filter(name=name).exists():
+            messages.error(request, "A company with this name already exists.")
+            return redirect('addcompany')
+
+        if Company.objects.filter(email=email).exists():
+            messages.error(request, "A company with this email already exists.")
+            return redirect('addcompany')
+
+        # Save company details
         company = Company(
             name=name,
             place=place,
-            street=street,
-            pincode=pincode,
             district=district,
             contact_number=contact_number,
-            email=email
+            email=email,
+            website=website
         )
         company.save()
+
         
-        return redirect('displaycompany')  # Redirect to display company page
+        return redirect('displaycompany')
 
     return render(request, 'addcompany.html')
+
+
 from django.shortcuts import render, redirect
 from .models import Company
 from django.http import HttpResponse
@@ -86,20 +108,6 @@ def display_placements(request):
     placements = Placement.objects.all()
     return render(request, 'displayplacement.html', {'placements': placements})
 
-def view_applicants(request, placement_id):
-    # Fetch the specific placement
-    placement = get_object_or_404(Placement, id=placement_id)
-    # Fetch all applications for this placement
-    applications = PlacementApplication.objects.filter(placement=placement)
-    # Extract student details
-    applicants = [
-        {"name": application.student.first_name, "email": application.student.email}
-        for application in applications
-    ]
-    return render(request, 'view_applicants.html', {
-        'placement': placement,
-        'applicants': applicants,
-    })
 
 
 from django.shortcuts import render, redirect
@@ -205,7 +213,7 @@ def update_profile(request):
         form = StudentProfileUpdateForm(request.POST, request.FILES, instance=student)
         if form.is_valid():
             form.save()
-            messages.success(request, "Your profile has been updated successfully.")
+            
             return redirect('applied_placements')  # Redirect to dashboard after updating
     else:
         form = StudentProfileUpdateForm(instance=student)
@@ -219,19 +227,15 @@ from datetime import date
 from django.shortcuts import render
 from .models import Placement, PlacementApplication
 
-def student_placements_view(request):
-    # Fetch placements and applied placements
-    placements = Placement.objects.all()
-    applied_placements = PlacementApplication.objects.filter(student=request.user)
+from django.shortcuts import render, get_object_or_404
+from django.utils.timezone import now
+from .models import Placement,PlacementApplication
 
-    # Add the current date to the context
-    context = {
-        'placements': placements,
-        'applied_placements': applied_placements,
-        'current_date': date.today(),  # Pass the current date to the template
-    }
+def student_placements(request):
+    placements = Placement.objects.all().order_by('-date_of_drive')  # Show latest first
 
-    return render(request, 'studentplacements.html', context)
+    return render(request, 'studentplacements.html', {'placements': placements})
+
 
 @login_required
 def apply_for_placement(request, placement_id):
@@ -244,7 +248,7 @@ def apply_for_placement(request, placement_id):
     else:
         messages.error(request, "You have already applied for this placement.")
 
-    return redirect('studentplacements')
+    return redirect('applied_placements')
 from django.shortcuts import render, get_object_or_404
 from .models import Placement, PlacementApplication, Student
 from .forms import ApplicantFilterForm
@@ -312,35 +316,45 @@ from datetime import timedelta
 from .models import Placement, PlacementApplication
 
 
-# View for applied placements
+from django.utils import timezone
+from datetime import timedelta
+
 def applied_placements(request):
     applied_placements = PlacementApplication.objects.filter(student=request.user)
 
+    for application in applied_placements:
+        # Check if the application is within the last 24 hours
+        application.can_cancel = timezone.now() - application.application_date < timedelta(days=1)
+
     context = {
         'applied_placements': applied_placements,
-        'now': timezone.now()  # Pass current time to the template for comparison
+        'now': timezone.now(),
     }
     return render(request, 'applied_placements.html', context)
 
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from django.contrib import messages
 from datetime import timedelta
 from .models import PlacementApplication
 
-# View for canceling the placement application
 def cancel_application(request, application_id):
-    application = get_object_or_404(PlacementApplication, id=application_id)
+    application = get_object_or_404(PlacementApplication, id=application_id, student=request.user)
 
-    # Check if the application was made within 1 day
+    # Check if the placement deadline has passed
+    if application.placement.last_date_to_apply < timezone.now().date():
+        messages.error(request, "You cannot cancel your application after the deadline.")
+        return redirect('studentplacements')
+
+    # Check if the application was made within the last 24 hours
     if application.application_date >= timezone.now() - timedelta(days=1):
-        # Delete the application
         application.delete()
         messages.success(request, "Your application has been successfully canceled.")
     else:
         messages.error(request, "You cannot cancel your application after 24 hours.")
-    
+
     return redirect('studentplacements')
+
 
 from django.shortcuts import render
 from .models import Student
@@ -446,7 +460,7 @@ def add_placed_student(request):
                 new_placed_student = form.save()
 
                
-                messages.success(request, f"{student_name} has been successfully added to the placed students list.")
+                
 
                 return redirect('display_placed_students')  # Redirect to display page after successful addition
 
@@ -619,7 +633,7 @@ def password_reset_confirm(request, uidb64, token):
             form = SetPasswordForm(user, request.POST)
             if form.is_valid():
                 form.save()
-                messages.success(request, "Your password has been reset successfully.")
+                
                 return redirect('password_reset_complete')
         else:
             form = SetPasswordForm(user)
@@ -639,29 +653,185 @@ from django.shortcuts import render
 from .forms import ContactForm
 from django.core.mail import send_mail
 from django.conf import settings
+from django.core.mail import EmailMessage
 
 def contact_view(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            # Extract the cleaned data from the form
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
             
-            # Send the email (example: sending to an admin email)
-            send_mail(
+            # Create email with reply_to
+            email_message = EmailMessage(
                 subject=f"Contact Us: {subject}",
-                message=f"Message from {name} ({email}):\n\n{message}",
-                from_email=email,
-                recipient_list=[settings.EMAIL_HOST_USER],  # Add admin email here
+                body=f"Message from {name} ({email}):\n\n{message}",
+                from_email=settings.EMAIL_HOST_USER,
+                to=[settings.EMAIL_HOST_USER],
+                reply_to=[email],  # <- this makes the "reply" go to user's email
             )
+            email_message.send(fail_silently=True)
             
-            # Optionally, you can add a success message
             return render(request, 'contact.html', {'form': form, 'success': True})
 
     else:
         form = ContactForm()
 
     return render(request, 'contact.html', {'form': form})
+
+
+# views.py
+from django.shortcuts import render
+from .models import Student
+from django.db.models import Count, Q
+
+def department_statistics(request):
+    # Aggregate the number of students and placed students by department and academic year
+    stats = Student.objects.values('department', 'academic_year').annotate(
+        total_students=Count('id'),
+        placed_students=Count('id', filter=Q(is_placed=True))
+    ).order_by('department', 'academic_year')
+    
+    # Pass the data to the template
+    return render(request, 'student_summary.html', {'stats': stats})
+
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .models import StudentPlacementRequest
+from .forms import StudentPlacementRequestForm
+
+@login_required
+def submit_placement(request):
+    if request.method == "POST":
+        form = StudentPlacementRequestForm(request.POST, request.FILES)
+        if form.is_valid():
+            placement_request = form.save(commit=False)
+            placement_request.student = request.user  # Assign the logged-in user
+            placement_request.save()
+            messages.success(request, "Your placement details have been submitted!")
+            return redirect("student_placement_status")  # Redirect to status page
+    else:
+        form = StudentPlacementRequestForm()
+
+    return render(request, "student_submit_placement.html", {"form": form})
+
+@login_required
+def student_placement_status(request):
+    placement_requests = StudentPlacementRequest.objects.filter(student=request.user)
+    return render(request, "student_placement_status.html", {"placement_requests": placement_requests})
+
+
+from django.contrib.auth.decorators import user_passes_test
+from django.core.mail import send_mail
+from django.conf import settings
+
+@user_passes_test(lambda u: u.is_superuser)
+def admin_review_placements(request):
+    placement_requests = StudentPlacementRequest.objects.filter(status="Pending")
+    return render(request, "admin_review_placements.html", {"placement_requests": placement_requests})
+
+@user_passes_test(lambda u: u.is_superuser)
+def approve_placement(request, placement_id):
+    placement = StudentPlacementRequest.objects.get(id=placement_id)
+    placement.status = "Accepted"
+    placement.save()
+
+    send_mail(
+        "Placement Approved",
+        f"Congratulations {placement.name}, your job placement at {placement.company} has been approved!",
+        settings.DEFAULT_FROM_EMAIL,
+        [placement.email],
+        fail_silently=True,
+    )
+
+   
+    return redirect("admin_review_placements")
+
+@user_passes_test(lambda u: u.is_superuser)
+def reject_placement(request, placement_id):
+    placement = StudentPlacementRequest.objects.get(id=placement_id)
+    placement.status = "Rejected"
+    placement.save()
+
+    send_mail(
+        "Placement Rejected",
+        f"Sorry {placement.name}, your job placement at {placement.company} has been rejected.",
+        settings.DEFAULT_FROM_EMAIL,
+        [placement.email],
+        fail_silently=True,
+    )
+
+    
+    return redirect("admin_review_placements")
+
+
+from .models import Placement
+import google.generativeai as genai
+from django.conf import settings
+
+# Configure Gemini API
+genai.configure(api_key=settings.GEMINI_API_KEY)
+model = genai.GenerativeModel('gemini-2.0-flash')
+from django.shortcuts import render, get_object_or_404, redirect
+from django.utils.timezone import now
+from .models import Placement, PlacementApplication, Student
+
+def placement_details(request, placement_id):
+    placement = get_object_or_404(Placement, id=placement_id)
+    applied_placements = PlacementApplication.objects.filter(student=request.user, placement=placement).exists()
+    
+    # Check if the last date to apply has passed
+    is_expired = placement.last_date_to_apply < now().date()
+
+    # Get student skills if user is authenticated
+    student_skills = ""
+    skills_analysis = None
+    
+    if request.user.is_authenticated:
+        try:
+            student = Student.objects.get(user=request.user)
+            student_skills = student.skills
+
+            # Prepare prompt for Gemini
+            prompt = f"""
+            Student Skills: {student_skills}
+            
+            Job Description: {placement.job_description}
+
+            Analyze if the student is eligible for this position based on their skills.
+            if not eligible, list the additional skills needed.
+            Also, for each missing skill, suggest one or two trusted online learning resources (like Coursera, Udemy, or official documentation) where the student can learn those skills.
+
+            Format your response as:
+            Eligible: Yes/No
+            Match Percentage: X%
+            Additional Skills Needed with Learning References:
+            - Skill 1: Reference Link 1, Reference Link 2
+            - Skill 2: Reference Link 1, Reference Link 2
+           
+    """
+
+            # Get response from Gemini
+            response = model.generate_content(prompt)
+            skills_analysis = response.text
+
+        except Student.DoesNotExist:
+            skills_analysis = "Please complete your profile to see skills analysis."
+
+    # Handle apply button functionality
+    if request.method == "POST" and not applied_placements and not is_expired:
+        PlacementApplication.objects.create(student=request.user, placement=placement)
+        return redirect('placement_details', placement_id=placement.id)
+
+    return render(request, 'placement_details.html', {
+        'placement': placement,
+        'applied': applied_placements,
+        'skills_analysis': skills_analysis,
+        'is_expired': is_expired  # Pass this to template to disable the apply button if expired
+    })

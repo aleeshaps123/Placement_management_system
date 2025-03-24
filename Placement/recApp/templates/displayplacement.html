@@ -16,6 +16,8 @@
         --active-link: #3949ab;
         --content-bg: #f8f9fa;
         --shadow-color: rgba(0, 0, 0, 0.1);
+        --accent-color: #1a237e;
+        --accent-hover: #283593;
     }
 
     * {
@@ -30,6 +32,7 @@
         display: flex;
         min-height: 100vh;
         background-color: var(--content-bg);
+        overflow-x: hidden; /* Prevent horizontal scrolling */
     }
 
     /* Sidebar styles */
@@ -43,6 +46,7 @@
         height: 100vh;
         position: fixed;
         box-shadow: 4px 0 10px var(--shadow-color);
+        z-index: 1000; /* Ensure sidebar appears above content */
     }
 
     .sidebar h2 {
@@ -117,6 +121,9 @@
         margin-left: 280px;
         background-color: var(--content-bg);
         min-height: 100vh;
+        width: calc(100% - 280px); /* Explicitly set width to prevent overflow */
+        box-sizing: border-box;
+        position: relative; /* Create new stacking context */
     }
 
     .content-inner {
@@ -124,6 +131,8 @@
         padding: 2rem;
         border-radius: 12px;
         box-shadow: 0 4px 6px var(--shadow-color);
+        width: 100%;
+        overflow: hidden; /* Prevent content from overflowing */
     }
 
     /* Placement Table styles */
@@ -133,10 +142,11 @@
         padding: 2rem;
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
         overflow-x: auto;
+        width: 100%;
     }
 
     .header-section {
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -232,6 +242,125 @@
         color: #e5e7eb;
     }
 
+    /* New styles for truncated job descriptions */
+    .job-description {
+        position: relative;
+        max-width: 300px;
+    }
+
+    .description-content {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        transition: all 0.3s ease;
+    }
+
+    .description-content.expanded {
+        -webkit-line-clamp: unset;
+    }
+
+    .read-more {
+        color: #1a237e;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-block;
+        margin-top: 3px;
+        font-size: 0.85rem;
+        transition: color 0.2s ease;
+    }
+
+    .read-more:hover {
+        color: #3949ab;
+        text-decoration: underline;
+    }
+
+    /* Search functionality styles */
+    .search-container {
+        margin-bottom: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .search-bar {
+        display: flex;
+        width: 100%;
+        position: relative;
+    }
+
+    .search-input {
+        flex: 1;
+        padding: 0.75rem 1rem 0.75rem 3rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        width: 100%;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6b7280;
+        pointer-events: none;
+    }
+
+    .search-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .filter-option {
+        padding: 0.5rem 1rem;
+        background-color: #f3f4f6;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        color: #4b5563;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .filter-option:hover {
+        background-color: #e5e7eb;
+    }
+
+    .filter-option.active {
+        background-color: var(--accent-color);
+        color: white;
+        border-color: var(--accent-color);
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 2rem;
+        color: #6b7280;
+        background-color: #f9fafb;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+
+    .highlight {
+        background-color: rgba(255, 230, 0, 0.3);
+        padding: 0 2px;
+        border-radius: 2px;
+    }
+
+    /* Media queries for responsive design */
     @media (max-width: 1024px) {
         .table-container {
             padding: 1rem;
@@ -241,6 +370,58 @@
         .placement-table td {
             padding: 0.75rem;
             font-size: 0.95rem;
+        }
+
+        .search-filters {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        /* Make sure search input stays within content area */
+        .search-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .search-bar {
+            width: 100%;
+        }
+    }
+
+    /* For smaller screens, we need a responsive sidebar */
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 240px;
+        }
+        
+        .content {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            padding: 1.5rem;
+        }
+        
+        .header-section h2 {
+            font-size: 1.5rem;
+        }
+        
+        .content-inner {
+            padding: 1.5rem;
+        }
+    }
+
+    /* For mobile devices */
+    @media (max-width: 576px) {
+        .content-inner {
+            padding: 1rem;
+        }
+        
+        .search-input {
+            font-size: 0.9rem;
+        }
+        
+        .table-container {
+            padding: 0.75rem;
         }
     }
 </style>
@@ -261,19 +442,23 @@
             </a>
             <a href="{% url 'addplacement' %}">
                 <i class="fas fa-user-plus"></i>
-                Add Placement
+                Add Job Opening
             </a>
             <a href="{% url 'displayplacement' %}" class="active">
                 <i class="fas fa-clipboard-list"></i>
-                Placement Details
+                Posted Jobs
+            </a>
+            <a href="{% url 'admin_review_placements' %}">
+                <i class="fas fa-user-graduate"></i>
+                Student Review Submission
             </a>
             <a href="{% url 'add_placed_student' %}">
                 <i class="fas fa-user-graduate"></i>
-                <span>Add new Placed Student</span>
+                <span>Add Placement Record</span>
             </a>
             <a href="{% url 'display_placed_students' %}">
                 <i class="fas fa-user-graduate"></i>
-                <span>Placed Students</span>
+                <span>Placement Records</span>
             </a>
             <a href="{% url 'student_profiles' %}">
                 <i class="fas fa-user-graduate"></i>
@@ -292,21 +477,40 @@
                 <div class="header-section">
                     <h2>
                         <i class="fas fa-briefcase"></i>
-                        Placement List
+                        Posted Jobs
                     </h2>
                 </div>
 
                 {% if placements %}
-                <table class="placement-table">
+                <div class="search-container">
+                    <div class="search-bar">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search for jobs..." onkeyup="searchTable()">
+                    </div>
+                    <div class="search-filters">
+                        <div class="filter-option active" data-filter="all" onclick="setFilter(this, 'all')">All Fields</div>
+                        <div class="filter-option" data-filter="title" onclick="setFilter(this, 'title')">Title</div>
+                        <div class="filter-option" data-filter="company" onclick="setFilter(this, 'company')">Company</div>
+                        <div class="filter-option" data-filter="location" onclick="setFilter(this, 'location')">Location</div>
+                        <div class="filter-option" data-filter="position" onclick="setFilter(this, 'position')">Position</div>
+                        <div class="filter-option" data-filter="description" onclick="setFilter(this, 'description')">Job Description</div>
+                        <div class="filter-option" data-filter="recruitment" onclick="setFilter(this, 'recruitment')">Recruitment Type</div>
+                        <div class="filter-option" data-filter="salary" onclick="setFilter(this, 'salary')">Salary</div>
+                        <div class="filter-option" data-filter="date" onclick="setFilter(this, 'date')">Dates</div>
+                    </div>
+                </div>
+
+                <table class="placement-table" id="placementTable">
                     <thead>
                         <tr>
                             <th>Title</th>
                             <th>Company</th>
                             <th>Location</th>
                             <th>Position</th>
-                            <th>Job Profile</th>
-                            <th>Date of Drive</th>
-                            <th>Salary Package (L)</th>
+                            <th>Job Description</th>
+                            <th>Drive Date</th>
+                            <th>Recruitment Type</th>
+                            <th>Salary Package (CTC)</th>
                             <th>Application due date</th>
                             <th>Actions</th>
                         </tr>
@@ -314,14 +518,24 @@
                     <tbody>
                         {% for placement in placements %}
                         <tr>
-                            <td>{{ placement.title }}</td>
-                            <td class="company-name">{{ placement.company.name }}</td>
-                            <td>{{ placement.location }}</td>
-                            <td>{{ placement.position }}</td>
-                            <td>{{ placement.job_profile }}</td>
-                            <td class="date-cell">{{ placement.date_of_drive }}</td>
-                            <td class="salary-package">₹{{ placement.salary_package }} L</td>
-                            <td class="date-cell">{{ placement.last_date_to_apply }}</td>
+                            <td data-column="title">{{ placement.title }}</td>
+                            <td data-column="company" class="company-name">{{ placement.company.name }}</td>
+                            <td data-column="location">{{ placement.location }}</td>
+                            <td data-column="position">{{ placement.position }}</td>
+                            <td data-column="description">
+                                <div class="job-description">
+                                    <div class="description-content" id="desc-{{ placement.id }}">
+                                        {{ placement.job_description }}
+                                    </div>
+                                    <span class="read-more" onclick="toggleDescription('desc-{{ placement.id }}', this)">
+                                        Read more
+                                    </span>
+                                </div>
+                            </td>
+                            <td data-column="date" class="date-cell">{{ placement.date_of_drive }}</td>
+                            <td data-column="recruitment">{{ placement.recruitment_type }}</td>
+                            <td data-column="salary" class="salary-package">₹{{ placement.salary_package }} L</td>
+                            <td data-column="date" class="date-cell">{{ placement.last_date_to_apply }}</td>
                             <td>
                                 <a href="{% url 'view_applicants' placement.id %}" class="action-link">
                                     <i class="fas fa-users"></i>
@@ -332,6 +546,10 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                <div id="noResults" class="no-results" style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <p>No matching jobs found. Try a different search term or filter.</p>
+                </div>
                 {% else %}
                 <div class="empty-state">
                     <i class="fas fa-briefcase"></i>
@@ -341,5 +559,151 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Toggle job description expand/collapse
+        function toggleDescription(descId, button) {
+            const description = document.getElementById(descId);
+            
+            if (description.classList.contains('expanded')) {
+                description.classList.remove('expanded');
+                button.textContent = 'Read more';
+            } else {
+                description.classList.add('expanded');
+                button.textContent = 'Read less';
+            }
+        }
+
+        // Search functionality
+        let currentFilter = 'all';
+
+        function setFilter(element, filter) {
+            // Remove active class from all filter options
+            document.querySelectorAll('.filter-option').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Add active class to clicked filter
+            element.classList.add('active');
+            
+            // Set current filter
+            currentFilter = filter;
+            
+            // Re-run search with new filter
+            searchTable();
+        }
+
+        function searchTable() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            const table = document.getElementById('placementTable');
+            const rows = table.getElementsByTagName('tr');
+            let matchFound = false;
+            
+            // Loop through all table rows (skip header)
+            for (let i = 1; i < rows.length; i++) {
+                let row = rows[i];
+                let cells = row.getElementsByTagName('td');
+                let shouldDisplay = false;
+                
+                if (currentFilter === 'all') {
+                    // Search all columns
+                    for (let j = 0; j < cells.length - 1; j++) { // Skip the last column (Actions)
+                        let cell = cells[j];
+                        if (cell) {
+                            let textValue = cell.textContent || cell.innerText;
+                            if (textValue.toUpperCase().indexOf(filter) > -1) {
+                                shouldDisplay = true;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    // Search specific column based on filter
+                    for (let j = 0; j < cells.length - 1; j++) {
+                        let cell = cells[j];
+                        if (cell && cell.getAttribute('data-column') === currentFilter) {
+                            let textValue = cell.textContent || cell.innerText;
+                            if (textValue.toUpperCase().indexOf(filter) > -1) {
+                                shouldDisplay = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                if (shouldDisplay) {
+                    matchFound = true;
+                    row.style.display = '';
+                    
+                    // Highlight matching text if search is not empty
+                    if (filter) {
+                        highlightText(row, filter);
+                    } else {
+                        // Remove highlighting if search is empty
+                        removeHighlighting(row);
+                    }
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+            
+            // Show/hide "No results" message
+            const noResults = document.getElementById('noResults');
+            if (!matchFound && filter) {
+                noResults.style.display = 'block';
+                table.style.display = 'none';
+            } else {
+                noResults.style.display = 'none';
+                table.style.display = 'table';
+            }
+        }
+        
+        function highlightText(row, filter) {
+            const cells = row.getElementsByTagName('td');
+            
+            for (let i = 0; i < cells.length - 1; i++) { // Skip Actions column
+                const cell = cells[i];
+                
+                // Skip highlighting for cells with description-content
+                if (cell.querySelector('.description-content')) {
+                    const descContent = cell.querySelector('.description-content');
+                    const originalText = descContent.innerText;
+                    
+                    // Remove existing highlights
+                    if (!cell.hasAttribute('data-original')) {
+                        cell.setAttribute('data-original', originalText);
+                    }
+                    
+                    // Skip complex highlighting for description to maintain read more/less functionality
+                    continue;
+                }
+                
+                // For other cells, apply highlighting
+                if (!cell.hasAttribute('data-original')) {
+                    cell.setAttribute('data-original', cell.innerHTML);
+                }
+                
+                const originalText = cell.getAttribute('data-original');
+                const regExp = new RegExp(filter, 'gi');
+                const newText = originalText.replace(regExp, match => `<span class="highlight">${match}</span>`);
+                
+                cell.innerHTML = newText;
+            }
+        }
+        
+        function removeHighlighting(row) {
+            const cells = row.getElementsByTagName('td');
+            
+            for (let i = 0; i < cells.length - 1; i++) {
+                const cell = cells[i];
+                
+                if (cell.hasAttribute('data-original')) {
+                    cell.innerHTML = cell.getAttribute('data-original');
+                    cell.removeAttribute('data-original');
+                }
+            }
+        }
+    </script>
 </body>
 </html>

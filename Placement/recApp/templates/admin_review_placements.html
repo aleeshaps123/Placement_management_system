@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="placement-review-container">
+    <div class="page-header">
+        <h2 class="page-title">
+            <i class="fas fa-clipboard-check"></i> 
+            Review Placement Submissions
+        </h2>
+        <div class="header-actions">
+            <span class="total-submissions">
+                Total Submissions: {{ placement_requests|length }}
+            </span>
+        </div>
+    </div>
+
+    {% if placement_requests %}
+        <div class="table-responsive">
+            <table class="professional-table">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Company</th>
+                        <th>Position</th>
+                        <th>Contact Details</th>
+                        <th>Placed Year</th>
+                        <th>Offer Letter</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for placement in placement_requests %}
+                    <tr>
+                        <td >{{ placement.name }}</td>
+                        <td >{{ placement.email }}</td>
+                        <td>{{ placement.department }}</td>
+                        <td class="company-name">{{ placement.company }}</td>
+                        <td>{{ placement.position }}</td>
+                        <td>
+                            <div class="contact-info">
+                                <span class="contact-number">{{ placement.contact_number }}</span>
+                            </div>
+                        </td>
+                        <td class="placed-year">{{ placement.placed_year }}</td>
+                        <td class="text-center">
+                            <a href="{{ placement.offer_letter.url }}" 
+                               target="_blank" 
+                               class="btn-view-offer">
+                                <i class="fas fa-file-pdf"></i> View
+                            </a>
+                        </td>
+                        <td class="action-column">
+                            <div class="action-buttons">
+                                <form method="POST" action="{% url 'approve_placement' placement.id %}" class="mb-2">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-approve">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                </form>
+                                <form method="POST" action="{% url 'reject_placement' placement.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-reject">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="no-submissions-alert">
+            <i class="fas fa-inbox"></i>
+            <p>No placement submissions are currently pending review.</p>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    :root {
+        --primary-color: #1a237e;
+        --secondary-color: #3f51b5;
+        --text-color: #2c3e50;
+        --background-color: #f4f6f9;
+        --table-border-color: #e0e4e8;
+    }
+
+    .placement-review-container {
+        background-color: white;
+        border-radius: 8px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--table-border-color);
+    }
+
+    .page-title {
+        color: var(--primary-color);
+        font-size: 1.8rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .page-title i {
+        color: var(--secondary-color);
+    }
+
+    .total-submissions {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-weight: 500;
+    }
+
+    .professional-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .professional-table th {
+        background-color: #f8f9fa;
+        color: var(--primary-color);
+        font-weight: 600;
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 2px solid var(--table-border-color);
+        white-space: nowrap;
+    }
+
+    .professional-table td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--table-border-color);
+        vertical-align: middle;
+    }
+
+    .student-name {
+        font-weight: 500;
+    }
+
+    .name-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .student-email {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    .text-muted {
+        color: #6c757d;
+    }
+
+    .action-column {
+        text-align: center;
+    }
+
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .btn-approve,
+    .btn-reject,
+    .btn-view-offer {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-approve {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-reject {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-view-offer {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .btn-approve:hover {
+        background-color: #218838;
+    }
+
+    .btn-reject:hover {
+        background-color: #c82333;
+    }
+
+    .btn-view-offer:hover {
+        background-color: #138496;
+    }
+
+    .no-submissions-alert {
+        text-align: center;
+        padding: 3rem;
+        background-color: var(--background-color);
+        border-radius: 8px;
+    }
+
+    .no-submissions-alert i {
+        font-size: 4rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .no-submissions-alert p {
+        color: var(--text-color);
+        font-size: 1.2rem;
+    }
+
+    @media (max-width: 768px) {
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .professional-table {
+            font-size: 0.9rem;
+        }
+
+        .professional-table th,
+        .professional-table td {
+            padding: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}

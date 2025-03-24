@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     "crispy_bootstrap4",
     'recApp',
+    
    
 ]
 
@@ -145,3 +146,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'aleeshasibi26@gmail.com'
 EMAIL_HOST_PASSWORD = 'blie svlv yzkg vqtu'
+
+# Add this to your settings
+GEMINI_API_KEY = 'AIzaSyDsxaIXxQbsdhpDTxf9RxXKZwUWnULBFck'

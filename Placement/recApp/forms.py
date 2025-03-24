@@ -4,7 +4,7 @@ from .models import Company, Placement
 class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
-        fields = ['name', 'place', 'street', 'pincode', 'district', 'contact_number', 'email']
+        fields = ['name', 'place', 'district', 'contact_number', 'email','website']
 
 from django import forms
 from .models import Placement
@@ -13,13 +13,23 @@ from datetime import date
 class PlacementForm(forms.ModelForm):
     class Meta:
         model = Placement
-        fields = ['title', 'company', 'location', 'email', 'contact_number', 'position', 'job_profile', 'date_of_drive', 'last_date_to_apply', 'salary_package','application_link']
+        fields = ['title', 'company', 'location', 'email', 'position', 'job_description', 'date_of_drive','recruitment_type', 'last_date_to_apply', 'salary_package','application_link']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Set default date to today's date for both fields
         self.fields['date_of_drive'].initial = date.today()  # Default to today's date for date_of_drive
         self.fields['last_date_to_apply'].initial = date.today()  # Default to today's date for last_date_to_apply
+
+        # Modify salary package field label to mention CTC
+        self.fields['salary_package'].label = "Salary Package (CTC) in LPA"
+
+     # 👉 Add salary_package validation
+    def clean_salary_package(self):
+        salary = self.cleaned_data.get('salary_package')
+        if salary is not None and salary < 0:
+            raise forms.ValidationError("Salary package cannot be negative.")
+        return salary
 
 from django import forms
 from django.contrib.auth.models import User
@@ -78,23 +88,25 @@ class StudentSignupForm(forms.ModelForm):
             raise forms.ValidationError("Password must contain at least one uppercase letter.")
         return password
 
-
 from django import forms
 from .models import Student
 from datetime import datetime
+import re
 
 class StudentProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Student
         fields = [
             'name', 'gender', 'date_of_birth', 'contact_number', 'email', 'department',
+            
             'sslc_percentage', 'sslc_year', 'hsc_percentage', 'hsc_year', 'ug_percentage', 'ug_year',
             'pg_percentage', 'pg_year', 'resume', 'image', 'skills'
         ]
         widgets = {
             'date_of_birth': forms.TextInput(attrs={'type': 'date'}),
             'resume': forms.ClearableFileInput(attrs={'accept': '.pdf,.doc,.docx'}),
-            'image': forms.ClearableFileInput(attrs={'accept': 'image/*'})
+            'image': forms.ClearableFileInput(attrs={'accept': 'image/*'}),
+            
         }
 
     def clean_sslc_percentage(self):
@@ -153,7 +165,7 @@ class StudentProfileUpdateForm(forms.ModelForm):
                 raise forms.ValidationError(f"PG year must be between 1900 and {current_year}.")
         return pg_year
 
-
+   
 
 from django import forms
 
@@ -201,3 +213,12 @@ class ContactForm(forms.Form):
         'class': 'form-control',
         'rows': 5
     }))
+
+
+from django import forms
+from .models import StudentPlacementRequest
+
+class StudentPlacementRequestForm(forms.ModelForm):
+    class Meta:
+        model = StudentPlacementRequest
+        exclude = ['status', 'student']  # Students shouldn't set the status

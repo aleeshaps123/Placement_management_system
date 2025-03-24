@@ -1,0 +1,32 @@
+<!-- templates/student/department_statistics.html -->
+
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>Department-wise Academic Year Statistics</h2>
+  
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Department</th>
+        <th>Academic Year</th>
+        <th>Total Students</th>
+        <th>Placed Students</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for stat in stats %}
+        <tr>
+          <td>{{ stat.department }}</td>
+          <td>{{ stat.academic_year }}</td>
+          <td>{{ stat.total_students }}</td>
+          <td>{{ stat.placed_students }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="4">No data available.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

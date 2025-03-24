@@ -3,15 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Placements | Student Portal</title>
+    <title>Current Openings | Student Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2563eb;
-            --primary-hover: #1d4ed8;
-            --sidebar-bg: #1e293b;
-            --sidebar-hover: #334155;
+            --primary-color: #0f172a;
+            --primary-hover: #1e293b;
+            --sidebar-bg: #0f172a;
+            --sidebar-hover: #1e293b;
             --text-primary: #1e293b;
             --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --table-header: #f8fafc;
+            --row-hover: #f1f5f9;
         }
 
         * {
@@ -21,12 +25,20 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #f8fafc;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             color: var(--text-primary);
-            line-height: 1.5;
+            line-height: 1.6;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Marian_College_Kuttikkanam.jpg/1200px-Marian_College_Kuttikkanam.jpg') no-repeat center center/cover;
-
+            z-index: -1;
         }
 
         .layout {
@@ -42,6 +54,9 @@
             position: fixed;
             height: 100vh;
             overflow-y: auto;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            background-color: rgba(15, 23, 42, 0.95);
         }
 
         .sidebar-header {
@@ -51,33 +66,34 @@
         }
 
         .sidebar-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: 0.025em;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
             margin-bottom: 1rem;
         }
 
         .user-info {
             font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .nav-links {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.375rem;
         }
 
         .nav-link {
             text-decoration: none;
             color: rgba(255, 255, 255, 0.8);
-            padding: 0.75rem 1rem;
+            padding: 0.875rem 1rem;
             border-radius: 0.5rem;
             transition: all 0.2s ease;
             font-size: 0.875rem;
+            font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.875rem;
         }
 
         .nav-link:hover, 
@@ -86,35 +102,23 @@
             color: #fff;
         }
 
+        .nav-link svg {
+            width: 18px;
+            height: 18px;
+        }
+
         .content {
             flex: 1;
             margin-left: 280px;
-            padding: 2rem;
-        }
-
-        .container {
-            background: #fff;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .page-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
+            padding: 2.5rem;
         }
 
         .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 2rem;
             overflow-x: auto;
         }
 
@@ -124,76 +128,101 @@
             border-spacing: 0;
         }
 
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
         th {
-            background-color: #f8fafc;
+            background-color: var(--table-header);
+            padding: 1rem 1.5rem;
+            text-align: left;
             font-weight: 600;
-            color: var(--text-secondary);
+            color: var(--text-primary);
             font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        tbody tr {
+            transition: all 0.2s ease;
         }
 
         tbody tr:hover {
-            background-color: #f8fafc;
+            background-color: var(--row-hover);
+        }
+
+        .placement-title {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .placement-title:hover {
+            color: var(--primary-hover);
         }
 
         .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.5rem;
             font-size: 0.875rem;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
-            border: none;
+            text-decoration: none;
         }
 
         .btn-primary {
             background-color: var(--primary-color);
             color: #fff;
+            border: none;
         }
 
         .btn-primary:hover {
             background-color: var(--primary-hover);
-        }
-
-        .btn-disabled {
-            background-color: #e5e7eb;
-            color: #9ca3af;
-            cursor: not-allowed;
+            transform: translateY(-1px);
         }
 
         .empty-state {
             text-align: center;
-            padding: 3rem;
+            padding: 4rem 2rem;
             color: var(--text-secondary);
+            font-size: 0.875rem;
         }
 
         .logout-link {
-            margin-top: auto;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 1rem;
             margin-top: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1.5rem;
         }
 
         @media (max-width: 768px) {
+            .layout {
+                flex-direction: column;
+            }
             .sidebar {
                 width: 100%;
                 height: auto;
                 position: relative;
+                padding: 1.5rem;
             }
-
             .content {
                 margin-left: 0;
+                padding: 1.5rem;
             }
-
-            .layout {
-                flex-direction: column;
+            .table-container {
+                padding: 1rem;
+            }
+            th, td {
+                padding: 1rem;
             }
         }
     </style>
@@ -207,82 +236,67 @@
             </div>
             <nav class="nav-links">
                 <a href="{% url 'updateprofile' %}" class="nav-link">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     Update Profile
                 </a>
                 <a href="{% url 'studentplacements' %}" class="nav-link active">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-                    Placement List
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                    Current Openings
                 </a>
                 <a href="{% url 'applied_placements' %}" class="nav-link">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                    Applied Placements
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    Applied Jobs
+                </a>
+                <a href="{% url 'submit_placement' %}" class="nav-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Offer Letter Submissions
+                </a>
+                <a href="{% url 'student_placement_status' %}" class="nav-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+                    Submission Status
                 </a>
             </nav>
-            <a href="{% url 'logout' %}"class="nav-link logout-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            <a href="{% url 'logout' %}" class="nav-link logout-link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                 Logout
             </a>
         </aside>
 
         <main class="content">
-            <div class="container">
-                <div class="page-header">
-                    <h2 class="page-title">Available Placements</h2>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Company</th>
-                                <th>Location</th>
-                                <th>Date of Drive</th>
-                                <th>Salary Package</th>
-                                <th>Last date to apply</th>
-                                <th>Application Link</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for placement in placements %}
-                            <tr>
-                                <td>{{ placement.title }}</td>
-                                <td>{{ placement.company.name }}</td>
-                                <td>{{ placement.location }}</td>
-                                <td>{{ placement.date_of_drive }}</td>
-                                <td>{{ placement.salary_package }}</td>
-                                <td>{{ placement.last_date_to_apply }}</td>
-                                <td>
-                                    {% if placement.application_link %}
-                                        <a href="{{ placement.application_link }}" target="_blank" style="color:blue; text-decoration: none;">Apply link</a>
-                                    {% else %}
-                                        No link
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if placement.id in applied_placements %}
-                                        <button class="btn btn-disabled">Applied</button>
-                                    {% elif placement.last_date_to_apply < current_date %}
-                                        <button class="btn btn-disabled">Expired</button>
-                                    {% else %}
-                                        <a href="{% url 'apply_for_placement' placement.id %}">
-                                            <button class="btn btn-primary">Apply</button>
-                                        </a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="8" class="empty-state">
-                                    No placements available at the moment.
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                        
-                    </table>
-                </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date of Drive</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for placement in placements %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'placement_details' placement.id %}" class="placement-title">
+                                    {{ placement.title }}
+                                </a>
+                            </td>
+                            <td>{{ placement.date_of_drive }}</td>
+                            <td>
+                                <a href="{% url 'placement_details' placement.id %}" class="btn btn-primary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    View Details
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="empty-state">
+                                No placements available at the moment.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </main>
     </div>
