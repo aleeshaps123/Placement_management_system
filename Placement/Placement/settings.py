@@ -144,8 +144,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'aleeshasibi26@gmail.com'
-EMAIL_HOST_PASSWORD = 'blie svlv yzkg vqtu'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 
-# Add this to your settings
-GEMINI_API_KEY = 'AIzaSyDsxaIXxQbsdhpDTxf9RxXKZwUWnULBFck'
